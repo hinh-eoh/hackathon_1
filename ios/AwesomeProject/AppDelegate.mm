@@ -3,6 +3,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit-swift.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
 
 @implementation AppDelegate
 
@@ -32,9 +33,10 @@
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [[FBSDKApplicationDelegate sharedInstance]application:app
-                                                      openURL:url
-                                                      options:options];
+//  return [[FBSDKApplicationDelegate sharedInstance]application:app
+//                                                      openURL:url
+//                                                      options:options];
+  return [[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options] || [RNGoogleSignin application:app openURL:url options:options];
 }
 
 /// This method controls whether the `concurrentRoot`feature of React18 is turned on or off.

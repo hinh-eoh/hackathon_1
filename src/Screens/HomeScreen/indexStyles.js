@@ -44,7 +44,7 @@ export default StyleSheet.create({
     },
     shadowOpacity: 0.17,
     shadowRadius: 2.54,
-    elevation: 3,
+    // elevation: 1,
   },
   wrapSuggestion: {
     width: '85%',

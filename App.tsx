@@ -7,7 +7,13 @@
 
 import React from 'react';
 import type {PropsWithChildren} from 'react';
-import {StyleSheet, Text, useColorScheme, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native';
 
 import {LoginButton, AccessToken} from 'react-native-fbsdk-next';
 
@@ -26,6 +32,21 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import AppNavigation from './src/Navigation/AppNavigation';
+
+import {
+  GoogleSignin,
+  statusCodes,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId:
+    '1069551243580-8gm9rdd0fgjudmgpkhcd1te3ocnma1fs.apps.googleusercontent.com',
+  iosClientId:
+    '1069551243580-ruh7bvd7013kkfv2n8t82e308ntneo2a.apps.googleusercontent.com',
+  offlineAccess: true,
+  forceCodeForRefreshToken: true,
+});
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -57,9 +78,27 @@ function Section({children, title}: SectionProps): JSX.Element {
   );
 }
 
+const signIn = async () => {
+  try {
+    await GoogleSignin.hasPlayServices();
+    const userInfo = await GoogleSignin.signIn();
+    console.log('kkkkk2', userInfo);
+  } catch (error) {
+    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      // user cancelled the login flow
+    } else if (error.code === statusCodes.IN_PROGRESS) {
+      // operation (e.g. sign in) is in progress already
+    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+      // play services not available or outdated
+    } else {
+      // some other error happened
+    }
+  }
+};
+
 function App(): JSX.Element {
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       {/* <MapView
         provider={PROVIDER_GOOGLE}
         region={{
@@ -71,7 +110,7 @@ function App(): JSX.Element {
         style={StyleSheet.absoluteFillObject}
       /> */}
 
-      {/* <LoginButton
+      <LoginButton
         onLoginFinished={(error, result) => {
           if (error) {
             console.log('login has error: ' + result.error);
@@ -84,9 +123,14 @@ function App(): JSX.Element {
           }
         }}
         onLogoutFinished={() => console.log('logout.')}
-      /> */}
-
-      <AppNavigation />
+      />
+      <GoogleSigninButton
+        style={{width: 192, height: 48, marginTop: 10}}
+        size={GoogleSigninButton.Size.Wide}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={signIn}
+      />
+      {/* <AppNavigation /> */}
     </View>
   );
 }
